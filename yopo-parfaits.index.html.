@@ -55,6 +55,253 @@ section{padding:110px 6vw;max-width:1250px;margin:auto}
 .tools{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
 .tools button,.tools label{font:inherit;font-size:.72rem;letter-spacing:.1em;color:var(--g1);background:none;border:1px solid #d4af3766;border-radius:30px;padding:6px 14px;cursor:pointer;transition:.3s}
 .tools button:hover,.tools label:hover{background:var(--g2);color:#000}
+.tools input{display:none}.tools label[hidden],.tools button[hidden],#owner-login[hidden],#owner-signout[hidden]{display:none!important}
+.card h4{font-size:1.35rem;margin:18px 0 4px;font-weight:600}
+.card p{margin:0;color:var(--mute);font-size:.85rem}
+.num{position:absolute;top:26px;left:30px;z-index:2;color:var(--g1);font-size:.85rem;letter-spacing:.2em;text-shadow:0 0 8px #000}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border:1px solid #d4af3733;border-radius:22px;overflow:hidden}
+.pillars div{padding:50px 24px;text-align:center;border-right:1px solid #d4af3722;background:radial-gradient(circle at 50% 0,#d4af3714,transparent 70%)}
+.pillars b{display:block;font-size:1.9rem;font-weight:800;margin-bottom:6px}
+.pillars span{color:var(--mute);letter-spacing:.2em;font-size:.8rem}
+.cta{text-align:center;padding:130px 6vw;background:radial-gradient(ellipse 50% 60% at 50% 50%,#d4af3726,transparent 70%)}
+.cta h3{font-size:clamp(2.2rem,7vw,4.4rem);margin:0 0 .3em;font-weight:800}
+.cta p{color:var(--mute);margin:0}
+footer{text-align:center;padding:40px 6vw 60px;color:var(--mute);border-top:1px solid #d4af3722;letter-spacing:.25em;font-size:.8rem}
+footer b{display:block;font-size:1.6rem;letter-spacing:.3em;margin-bottom:8px}
+.rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.7,.2,1)}
+.rv.on{opacity:1;transform:none}
+@media(max-width:600px){nav a{margin-left:12px;font-size:.75rem}.hero h2{letter-spacing:.4em}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav><b class="gold">YOPO</b><div><a href="#menu">MENU</a><a href="#why">WHY YOPO</a><a href="#order">ORDER</a></div></nav>
+
+<header class="hero" id="top">
+  <div class="ring"></div><div class="ring two"></div>
+  <h1 class="gold">YOPO</h1>
+  <h2>PARFAITS</h2>
+  <p class="desc">REAL FRUIT. HIGH PROTEIN. NO PRESERVATIVES</p>
+  <p>Fresh ingredients. Beautifully balanced.</p>
+  <a class="btn" href="#menu">EXPLORE THE MENU</a>
+  <div class="scroll"></div>
+</header>
+
+<div class="marquee"><div id="mq"></div></div>
+
+<section id="menu">
+  <div class="title rv"><small>THE COLLECTION</small><h3 class="gold">Four Parfaits</h3><i></i></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="why">
+  <div class="title rv"><small>THE PROMISE</small><h3 class="gold">Why YOPO</h3><i></i></div>
+  <div class="pillars rv">
+    <div><b class="gold">Real Fruit</b><span>FRESH INGREDIENTS</span></div>
+    <div><b class="gold">High Protein</b><span>BUILT TO SATISFY</span></div>
+    <div><b class="gold">No Preservatives</b><span>BEAUTIFULLY BALANCED</span></div>
+  </div>
+</section>
+
+<div class="cta" id="order">
+  <h3 class="gold rv">Taste the gold.</h3>
+  <p class="rv">Follow and order on Instagram</p>
+  <a class="btn rv" href="https://www.instagram.com/yopo.parfaits" target="_blank" rel="noopener">@yopo.parfaits</a>
+</div>
+
+<footer><b class="gold">YOPO PARFAITS</b>yopo.parfaits</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Add your Supabase Project URL and publishable key below before publishing.
+var SUPABASE_URL = 'https://gapztddjmcmhxptanioi.supabase.co';
+var SUPABASE_PUBLISHABLE_KEY = 'PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE';
+var OWNER_UID = 'd0f8bb6b-4f51-4271-9fc5-a5284604cfc3';
+var BUCKET = 'product-photos';
+var supabase = null;
+if (window.supabase && SUPABASE_PUBLISHABLE_KEY !== 'PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE') {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+}
+var P=[
+{id:'blueberry',n:'Blueberry Bliss',d:'A creamy, indulgent parfait layered with smooth yogurt, juicy blueberry flavour, and satisfying granola crunch. A beautiful balance of creamy texture, fruity sweetness, and a deliciously crunchy finish.'},
+{id:'banana',n:'Banana Peanut Crunch',d:'A delicious combination of creamy yogurt, comforting banana flavour, rich peanut notes, and crunchy granola. Smooth, nutty, and satisfying, with layers of texture in every spoonful.'},
+{id:'choc',n:'Dark Chocolate Crunch',d:'A rich, chocolate-inspired parfait combining creamy yogurt, deep cocoa flavour, and crunchy granola for an indulgent contrast of smoothness and crunch. A bold treat for chocolate lovers.'},
+{id:'apple',n:'Apple Cinnamon Crunch',d:'A comforting blend of creamy yogurt, sweet apple flavour, warming cinnamon notes, and crunchy granola. A deliciously balanced combination of smooth, fruity, and gently spiced flavours.'}
+];
+var glass='<svg viewBox="0 0 100 130" fill="none" stroke="#d4af37" stroke-width="2"><path d="M18 10h64l-8 100a10 10 0 0 1-10 9H36a10 10 0 0 1-10-9z"/><path d="M22 45h56M25 75h50" stroke-opacity=".5"/><circle cx="50" cy="4" r="3" fill="#f6e27a"/></svg>';
+var currentUser=null;
+var adminPanel=document.createElement('div');
+adminPanel.id='owner-panel';
+adminPanel.style.cssText='max-width:900px;margin:0 auto 30px;padding:20px;border:1px solid #d4af3766;border-radius:16px;text-align:center;background:#080600';
+adminPanel.innerHTML='<p style="color:#d4af37;margin-top:0">OWNER PHOTO CONTROLS</p><form id="owner-login" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><input id="owner-email" type="email" autocomplete="username" placeholder="Owner email" required style="font:inherit;background:#000;color:#f6e27a;border:1px solid #d4af3766;border-radius:24px;padding:10px 14px;max-width:260px"><input id="owner-password" type="password" autocomplete="current-password" placeholder="Password" required style="font:inherit;background:#000;color:#f6e27a;border:1px solid #d4af3766;border-radius:24px;padding:10px 14px;max-width:220px"><button class="btn" type="submit" style="margin-top:0;padding:10px 20px">OWNER SIGN IN</button></form><p id="owner-status" role="status" style="font-size:.85rem;color:#d4af37"></p><button id="owner-signout" class="btn" type="button" hidden style="margin-top:0">SIGN OUT</button>';
+document.getElementById('menu').appendChild(adminPanel);
+function status(msg){document.getElementById('owner-status').textContent=msg;}
+function photoPath(p){return p.id+'.jpg';}
+function publicPhotoUrl(p){
+  if(!supabase)return null;
+  var x=supabase.storage.from(BUCKET).getPublicUrl(photoPath(p));
+  return x.data && x.data.publicUrl ? x.data.publicUrl+'?v='+Date.now() : null;
+}
+function isOwner(){return !!(currentUser && currentUser.id===OWNER_UID);}
+function updateControls(){
+  P.forEach(function(p){
+    var upload=document.getElementById('f-'+p.id);
+    var label=document.getElementById('lb-'+p.id).parentElement;
+    var rm=document.getElementById('rm-'+p.id);
+    label.hidden=!isOwner();
+    rm.hidden=!(isOwner() && document.getElementById('ph-'+p.id).querySelector('img'));
+  });
+  document.getElementById('owner-login').hidden=isOwner();
+  document.getElementById('owner-signout').hidden=!isOwner();
+}
+function showPhoto(p){
+  var ph=document.getElementById('ph-'+p.id);
+  var url=publicPhotoUrl(p);
+  ph.innerHTML=glass;
+  if(!url)return;
+  var img=document.createElement('img');
+  img.alt=p.n;
+  img.src=url;
+  img.addEventListener('error',function(){ph.innerHTML=glass;});
+  ph.innerHTML='';
+  ph.appendChild(img);
+}
+var g=document.getElementById('grid');
+P.forEach(function(p,i){
+  var c=document.createElement('article');c.className='card rv';c.style.transitionDelay=(i*.12)+'s';
+  c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
+  g.appendChild(c);
+  document.getElementById('f-'+p.id).addEventListener('change',async function(e){
+    var f=e.target.files[0];if(!f)return;
+    if(!isOwner()){status('Please sign in with the owner account first.');e.target.value='';return;}
+    if(!f.type.startsWith('image/')){status('Please choose an image file.');e.target.value='';return;}
+    status('Uploading '+p.n+' photo…');
+    try{
+      var im=new Image(), localUrl=URL.createObjectURL(f);
+      im.onload=async function(){
+        try{
+          var m=1400,k=Math.min(1,m/Math.max(im.width,im.height)),cv=document.createElement('canvas');
+          cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);
+          cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+          var blob=await new Promise(function(resolve,reject){cv.toBlob(function(b){b?resolve(b):reject(new Error('Could not process this image.'));},'image/jpeg',.88);});
+          var result=await supabase.storage.from(BUCKET).upload(photoPath(p),blob,{contentType:'image/jpeg',upsert:true,cacheControl:'0'});
+          if(result.error)throw result.error;
+          showPhoto(p);updateControls();status(p.n+' photo saved for all visitors.');
+        }catch(err){status('Upload failed: '+(err.message||'Check your Supabase storage policies and key.'));}
+        finally{URL.revokeObjectURL(localUrl);e.target.value='';}
+      };
+      im.onerror=function(){URL.revokeObjectURL(localUrl);e.target.value='';status('That image could not be opened. Please try another.');};
+      im.src=localUrl;
+    }catch(err){status('Upload failed: '+(err.message||'Please try again.'));e.target.value='';}
+  });
+  document.getElementById('rm-'+p.id).addEventListener('click',async function(){
+    if(!isOwner())return;
+    if(!confirm('Remove the '+p.n+' photo for all visitors?'))return;
+    status('Removing '+p.n+' photo…');
+    var result=await supabase.storage.from(BUCKET).remove([photoPath(p)]);
+    if(result.error){status('Remove failed: '+result.error.message);return;}
+    showPhoto(p);updateControls();status(p.n+' photo removed.');
+  });
+});
+document.getElementById('owner-login').addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(!supabase){status('Add your Supabase publishable key in the website code first, then publish again.');return;}
+  status('Signing in…');
+  var result=await supabase.auth.signInWithPassword({email:document.getElementById('owner-email').value.trim(),password:document.getElementById('owner-password').value});
+  if(result.error){status('Sign-in failed: '+result.error.message);return;}
+  currentUser=result.data.user;
+  if(!isOwner()){await supabase.auth.signOut();currentUser=null;status('This account is not the configured YOPO owner account.');updateControls();return;}
+  status('Signed in. You can now upload, replace, or remove product photos.');
+  updateControls();
+});
+document.getElementById('owner-signout').addEventListener('click',async function(){
+  if(supabase)await supabase.auth.signOut();
+  currentUser=null;updateControls();status('Signed out. Product photos remain visible to visitors.');
+});
+async function initPhotos(){
+  P.forEach(showPhoto);
+  if(supabase){
+    var result=await supabase.auth.getSession();
+    currentUser=result.data && result.data.session ? result.data.session.user : null;
+    if(currentUser && !isOwner()){await supabase.auth.signOut();currentUser=null;}
+    supabase.auth.onAuthStateChange(function(_event,session){
+      currentUser=session?session.user:null;
+      if(currentUser && !isOwner()){supabase.auth.signOut();currentUser=null;status('This account is not the configured YOPO owner account.');}
+      updateControls();
+    });
+  } else {
+    status('Owner photo controls need the Supabase publishable key added to the site code.');
+  }
+  updateControls();
+}
+initPhotos();
+var t=P.map(function(p){return p.n.toUpperCase()}).join('  ✦  ')+'  ✦  ';
+document.getElementById('mq').textContent=t+t+t+t;
+var h=document.querySelector('.hero');
+for(var i=0;i<26;i++){var d=document.createElement('span');d.className='dot';var s=2+Math.random()*4;
+  d.style.cssText='left:'+Math.random()*100+'%;bottom:-10px;width:'+s+'px;height:'+s+'px;animation-duration:'+(8+Math.random()*12)+'s;animation-delay:'+(-Math.random()*15)+'s';h.appendChild(d);}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YOPO PARFAITS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--ink:#f4ecd6;--mute:#a99a6c;--g1:#f6e27a;--g2:#d4af37;--g3:#8a6d1d;
+--gold:linear-gradient(120deg,#8a6d1d,#f6e27a 30%,#d4af37 55%,#fff1a8 75%,#8a6d1d);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Playpen Sans',cursive;font-style:normal;overflow-x:hidden;line-height:1.6}
+*{font-style:normal!important}
+.gold{background:var(--gold);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 5vw 14px;background:linear-gradient(#000e,#0000)}
+nav b{font-size:1.4rem;letter-spacing:.2em;font-weight:800}
+nav a{color:var(--g1);text-decoration:none;margin-left:22px;font-size:.9rem;letter-spacing:.12em}
+nav a:hover{color:#fff}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 6vw 80px;position:relative;overflow:hidden;
+background:radial-gradient(ellipse 60% 45% at 50% 40%,#d4af3730,transparent 70%),radial-gradient(ellipse 40% 30% at 15% 90%,#d4af3718,transparent),#000}
+.ring{position:absolute;width:min(90vw,760px);aspect-ratio:1;border-radius:50%;border:1px solid #d4af3740;top:50%;left:50%;translate:-50% -52%;animation:spin 40s linear infinite}
+.ring::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:var(--g1);box-shadow:0 0 24px 6px #f6e27a99;top:-7px;left:50%}
+.ring.two{width:min(120vw,1020px);animation-duration:70s;animation-direction:reverse;border-color:#d4af3722}
+@keyframes spin{to{rotate:360deg}}
+.dot{position:absolute;border-radius:50%;background:var(--g1);opacity:0;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(40px);opacity:0}15%{opacity:.8}100%{transform:translateY(-110vh);opacity:0}}
+.hero h1{font-size:clamp(5rem,22vw,14rem);margin:0;line-height:.95;font-weight:800;letter-spacing:.06em;position:relative;filter:drop-shadow(0 0 30px #d4af3755)}
+.hero h2{font-weight:300;letter-spacing:.7em;font-size:clamp(.9rem,3vw,1.6rem);margin:.4rem 0 1.6rem;color:var(--g1);position:relative}
+.hero p{max-width:34rem;color:var(--mute);position:relative;margin:.3rem auto}
+.desc{letter-spacing:.25em;font-size:.8rem;color:var(--g2)!important}
+.btn{position:relative;display:inline-block;margin-top:2rem;padding:15px 38px;border:1px solid var(--g2);color:var(--g1);text-decoration:none;letter-spacing:.2em;border-radius:50px;overflow:hidden;transition:.4s;background:#000}
+.btn:hover{background:var(--gold);color:#000;box-shadow:0 0 40px #d4af3777}
+.scroll{position:absolute;bottom:26px;left:50%;translate:-50%;width:22px;height:38px;border:1px solid var(--g2);border-radius:20px}
+.scroll::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:8px;margin-left:-1.5px;background:var(--g1);border-radius:2px;animation:wheel 1.8s infinite}
+@keyframes wheel{to{transform:translateY(14px);opacity:0}}
+.marquee{border-block:1px solid #d4af3733;overflow:hidden;white-space:nowrap;padding:16px 0;background:#080600}
+.marquee div{display:inline-block;animation:slide 28s linear infinite;color:var(--g2);letter-spacing:.35em;font-size:.95rem}
+@keyframes slide{to{transform:translateX(-50%)}}
+section{padding:110px 6vw;max-width:1250px;margin:auto}
+.title{text-align:center;margin-bottom:60px}
+.title small{color:var(--mute);letter-spacing:.4em}
+.title h3{font-size:clamp(2rem,6vw,3.6rem);margin:.2em 0;font-weight:800}
+.title i{display:block;width:90px;height:1px;margin:14px auto 0;background:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px}
+.card{position:relative;border-radius:22px;padding:1px;background:linear-gradient(160deg,#d4af37aa,#1a1400 40%,#d4af3755);transition:transform .5s,box-shadow .5s}
+.card:hover{transform:translateY(-10px);box-shadow:0 25px 60px -20px #d4af3766}
+.card .in{background:linear-gradient(#0c0a03,#000);border-radius:21px;padding:16px 16px 26px;height:100%;text-align:center}
+.ph{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 35%,#d4af3724,#050400 70%);display:flex;align-items:center;justify-content:center;position:relative;border:1px dashed #d4af3755}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph svg{width:46%;opacity:.8}
+.tools{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.tools button,.tools label{font:inherit;font-size:.72rem;letter-spacing:.1em;color:var(--g1);background:none;border:1px solid #d4af3766;border-radius:30px;padding:6px 14px;cursor:pointer;transition:.3s}
+.tools button:hover,.tools label:hover{background:var(--g2);color:#000}
 .tools input{display:none}
 .card h4{font-size:1.35rem;margin:18px 0 4px;font-weight:600}
 .card p{margin:0;color:var(--mute);font-size:.85rem}
