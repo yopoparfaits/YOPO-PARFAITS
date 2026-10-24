@@ -52,7 +52,12 @@ section{padding:110px 6vw;max-width:1250px;margin:auto}
 .ph{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 35%,#d4af3724,#050400 70%);display:flex;align-items:center;justify-content:center;position:relative;border:1px dashed #d4af3755}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph svg{width:46%;opacity:.8}
-.tools{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.tools{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap} 
+.quantity{display:flex;align-items:center;justify-content:center;gap:20px;margin:22px 0}
+.quantity button{width:38px;height:38px;border:1px solid #d4af37;border-radius:50%;background:#000;color:#f6e27a;font-size:1.4rem;cursor:pointer}
+.quantity button:hover{background:#d4af37;color:#000}
+.qty-value{min-width:24px;color:#f6e27a;font-size:1.15rem;font-weight:600}
+.quantity button:focus-visible{outline:2px solid #f6e27a;outline-offset:3px}
 .tools button,.tools label{font:inherit;font-size:.72rem;letter-spacing:.1em;color:var(--g1);background:none;border:1px solid #d4af3766;border-radius:30px;padding:6px 14px;cursor:pointer;transition:.3s}
 .tools button:hover,.tools label:hover{background:var(--g2);color:#000}
 .tools input{display:none}.tools label[hidden],.tools button[hidden],#owner-login[hidden],#owner-signout[hidden]{display:none!important}
@@ -123,7 +128,7 @@ footer b{display:block;font-size:1.6rem;letter-spacing:.3em;margin-bottom:8px}
 
   <div class="cta" id="order">
   <h3 class="gold rv">Taste the gold.</h3>
-   <p class="rv">Order your favourite parfait on WhatsApp</p> <a class="btn rv" href="https://wa.me/919390263772?text=Hi%20YOPO%20PARFAITS%2C%20I%20would%20like%20to%20place%20an%20order." target="_blank" rel="noopener">ORDER ON WHATSAPP</a>
+   <p class="rv">Order your favourite parfait on WhatsApp</p>  <a class="btn rv" href="https://wa.me/919390263772" id="whatsapp-order" target="_blank" rel="noopener">ORDER ON WHATSAPP</a>
   <a class="btn rv" href="https://www.instagram.com/yopo.parfaits" target="_blank" rel="noopener">@yopo.parfaits</a>
 </div>
 
@@ -186,11 +191,41 @@ function showPhoto(p){
   ph.innerHTML='';
   ph.appendChild(img);
 }
-var g=document.getElementById('grid');
+var yopoQuantities={};
+document.getElementById('whatsapp-order').addEventListener('click',function(e){
+  var items=[];
+  P.forEach(function(p){
+    var qty=yopoQuantities[p.id]||0;
+    if(qty>0)items.push(p.n+' x '+qty);
+  });
+  if(items.length===0){
+    e.preventDefault();
+    alert('Please select at least one parfait using the + button.');
+    return;
+  }
+  var message='Hi YOPO PARFAITS! I would like to order:\n\n'+items.join('\n')+'\n\nPlease confirm my order. Thank you!';
+  this.href='https://wa.me/919390263772?text='+encodeURIComponent(message);
+});
+
+  var g=document.getElementById('grid');
 P.forEach(function(p,i){
   var c=document.createElement('article');c.className='card rv';c.style.transitionDelay=(i*.12)+'s';
-   c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="quantity"><button type="button" class="qty-minus" aria-label="Decrease '+p.n+' quantity">−</button><span class="qty-value" id="qty-'+p.id+'">0</span><button type="button" class="qty-plus" aria-label="Increase '+p.n+' quantity">+</button></div><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';'<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
+  
+  c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="quantity"><button type="button" class="qty-minus" aria-label="Decrease '+p.n+' quantity">−</button><span class="qty-value" id="qty-'+p.id+'">0</span><button type="button" class="qty-plus" aria-label="Increase '+p.n+' quantity">+</button></div><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
   g.appendChild(c);
+ 
+  var qty=0;
+  c.querySelector('.qty-minus').addEventListener('click',function(){
+    qty=Math.max(0,qty-1);
+    yopoQuantities[p.id]=qty;
+    document.getElementById('qty-'+p.id).textContent=qty;
+  });
+  c.querySelector('.qty-plus').addEventListener('click',function(){
+    qty++;
+    yopoQuantities[p.id]=qty;
+    document.getElementById('qty-'+p.id).textContent=qty;
+  });
+
   document.getElementById('f-'+p.id).addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
     if(!isOwner()){status('Please sign in with the owner account first.');e.target.value='';return;}
