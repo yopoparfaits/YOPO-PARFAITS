@@ -77,6 +77,33 @@ footer b{display:block;font-size:1.6rem;letter-spacing:.3em;margin-bottom:8px}
 .rv.on{opacity:1;transform:none}
 @media(max-width:600px){nav a{margin-left:12px;font-size:.75rem}.hero h2{letter-spacing:.4em}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+/* Independent character animation: original vector characters, not a moving picture */
+.tag-play{position:relative;width:min(560px,92vw);height:170px;margin:30px auto 0;overflow:hidden;isolation:isolate;pointer-events:none;}
+.tag-play .runner{position:absolute;width:118px;height:138px;bottom:5px;will-change:transform;}
+.tag-play .monkey{left:0;animation:monkeyTag 7.2s ease-in-out infinite;}
+.tag-play .squirrel{right:0;animation:squirrelTag 7.2s ease-in-out infinite;}
+.tag-play svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 7px 5px #000b)}
+.tag-play .body-bob{transform-box:fill-box;transform-origin:center;animation:bodyBob .32s ease-in-out infinite alternate;}
+.tag-play .leg-a{transform-box:fill-box;transform-origin:top center;animation:legRun .24s ease-in-out infinite alternate;}
+.tag-play .leg-b{transform-box:fill-box;transform-origin:top center;animation:legRun .24s ease-in-out infinite alternate-reverse;}
+.tag-play .arm-a{transform-box:fill-box;transform-origin:top center;animation:armRun .24s ease-in-out infinite alternate-reverse;}
+.tag-play .arm-b{transform-box:fill-box;transform-origin:top center;animation:armRun .24s ease-in-out infinite alternate;}
+.tag-play .tail{transform-box:fill-box;transform-origin:20% 80%;animation:tailFlick .55s ease-in-out infinite alternate;}
+.tag-play .tag-hand{transform-box:fill-box;transform-origin:top center;animation:touchTap 7.2s ease-in-out infinite;}
+.tag-play .tag-word{position:absolute;left:50%;top:0;transform:translateX(-50%);font:700 11px/1.2 Arial,sans-serif;letter-spacing:.28em;color:#f6e27a;opacity:0;animation:tagFlash 7.2s linear infinite;white-space:nowrap;text-shadow:0 0 12px #d4af37;}
+@keyframes bodyBob{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-5px) rotate(2deg)}}
+@keyframes legRun{from{transform:rotate(-32deg)}to{transform:rotate(34deg)}}
+@keyframes armRun{from{transform:rotate(30deg)}to{transform:rotate(-34deg)}}
+@keyframes tailFlick{from{transform:rotate(-9deg)}to{transform:rotate(13deg)}}
+/* run toward each other, meet for a tap, then swap chaser and repeat */
+@keyframes monkeyTag{0%{transform:translate(0,0) scaleX(1)}18%{transform:translate(125px,-4px) scaleX(1)}31%{transform:translate(260px,0) scaleX(1)}36%{transform:translate(275px,-5px) scaleX(1)}42%{transform:translate(240px,0) scaleX(-1)}55%{transform:translate(105px,-4px) scaleX(-1)}70%{transform:translate(0,0) scaleX(-1)}78%{transform:translate(12px,-3px) scaleX(1)}100%{transform:translate(0,0) scaleX(1)}}
+@keyframes squirrelTag{0%{transform:translate(0,0) scaleX(-1)}18%{transform:translate(-125px,-5px) scaleX(-1)}31%{transform:translate(-260px,0) scaleX(-1)}36%{transform:translate(-265px,-6px) scaleX(-1)}42%{transform:translate(-230px,0) scaleX(1)}55%{transform:translate(-100px,-5px) scaleX(1)}70%{transform:translate(0,0) scaleX(1)}78%{transform:translate(-10px,-3px) scaleX(-1)}100%{transform:translate(0,0) scaleX(-1)}}
+@keyframes touchTap{0%,31%,100%{transform:rotate(0)}34%,38%{transform:rotate(-70deg)}42%{transform:rotate(0)}}
+@keyframes tagFlash{0%,29%,43%,100%{opacity:0;transform:translate(-50%,5px) scale(.8)}33%,40%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@media(max-width:480px){.tag-play{height:145px}.tag-play .runner{width:94px;height:116px}.tag-play .monkey{left:2px}.tag-play .squirrel{right:2px}}
+@media(prefers-reduced-motion:reduce){.tag-play .runner,.tag-play .body-bob,.tag-play .leg-a,.tag-play .leg-b,.tag-play .arm-a,.tag-play .arm-b,.tag-play .tail,.tag-play .tag-hand,.tag-play .tag-word{animation:none!important}.tag-play .monkey{left:18%;transform:none}.tag-play .squirrel{right:18%;transform:none}}
+
 </style>
 </head>
 <body>
@@ -89,6 +116,61 @@ footer b{display:block;font-size:1.6rem;letter-spacing:.3em;margin-bottom:8px}
   <p class="desc">REAL FRUIT. HIGH PROTEIN. NO PRESERVATIVES</p>
   <p>Fresh ingredients. Beautifully balanced.</p>
   <a class="btn" href="#menu">EXPLORE THE MENU</a>
+  <div class="tag-play" aria-label="A cartoon monkey and squirrel run after each other and play tag" role="img">
+    <span class="tag-word">TAG! YOU'RE IT!</span>
+    <div class="runner monkey">
+      <svg viewBox="0 0 120 140" aria-hidden="true">
+        <!-- tail -->
+        <path class="tail" d="M42 86 C8 93 12 122 31 119 C45 117 42 102 31 104" fill="none" stroke="#8c4b26" stroke-width="10" stroke-linecap="round"/>
+        <g class="body-bob">
+          <!-- body and tummy -->
+          <ellipse cx="57" cy="86" rx="25" ry="31" fill="#92522b" stroke="#492817" stroke-width="2"/>
+          <ellipse cx="59" cy="91" rx="15" ry="21" fill="#e8bd87"/>
+          <!-- head and ears -->
+          <circle cx="35" cy="36" r="12" fill="#92522b" stroke="#492817" stroke-width="2"/><circle cx="69" cy="36" r="12" fill="#92522b" stroke="#492817" stroke-width="2"/>
+          <circle cx="35" cy="36" r="6" fill="#e8bd87"/><circle cx="69" cy="36" r="6" fill="#e8bd87"/>
+          <ellipse cx="52" cy="39" rx="27" ry="27" fill="#a96636" stroke="#492817" stroke-width="2"/>
+          <ellipse cx="52" cy="48" rx="18" ry="14" fill="#f0d0a1"/>
+          <ellipse cx="43" cy="38" rx="5" ry="7" fill="#fff"/><ellipse cx="61" cy="38" rx="5" ry="7" fill="#fff"/>
+          <circle cx="45" cy="39" r="2.7" fill="#21150e"/><circle cx="60" cy="39" r="2.7" fill="#21150e"/>
+          <ellipse cx="52" cy="47" rx="5" ry="3.5" fill="#4a2b1c"/>
+          <path d="M44 53 Q52 61 61 52" fill="none" stroke="#4a2b1c" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="37" cy="49" r="3" fill="#d98b78" opacity=".7"/><circle cx="67" cy="49" r="3" fill="#d98b78" opacity=".7"/>
+        </g>
+        <!-- articulated arms -->
+        <g class="arm-a"><path d="M42 69 Q27 76 21 61" fill="none" stroke="#92522b" stroke-width="11" stroke-linecap="round"/><circle cx="20" cy="59" r="6" fill="#e8bd87"/></g>
+        <g class="arm-b tag-hand"><path d="M73 70 Q88 62 92 47" fill="none" stroke="#92522b" stroke-width="11" stroke-linecap="round"/><circle cx="93" cy="45" r="6" fill="#e8bd87"/></g>
+        <!-- running legs -->
+        <g class="leg-a"><path d="M47 107 L37 124" stroke="#6f391f" stroke-width="12" stroke-linecap="round"/><ellipse cx="31" cy="126" rx="12" ry="6" fill="#e8bd87"/></g>
+        <g class="leg-b"><path d="M67 107 L77 123" stroke="#6f391f" stroke-width="12" stroke-linecap="round"/><ellipse cx="82" cy="125" rx="12" ry="6" fill="#e8bd87"/></g>
+      </svg>
+    </div>
+    <div class="runner squirrel">
+      <svg viewBox="0 0 120 140" aria-hidden="true">
+        <!-- oversized bushy tail -->
+        <path class="tail" d="M69 93 C104 91 113 63 98 46 C87 34 77 45 83 55 C62 43 54 66 69 77 C52 72 50 88 69 93Z" fill="#bd762d" stroke="#613713" stroke-width="2.5"/>
+        <path d="M78 82 Q98 68 93 52 Q88 47 86 55 Q83 66 72 70" fill="none" stroke="#eab66b" stroke-width="5" stroke-linecap="round"/>
+        <g class="body-bob">
+          <ellipse cx="53" cy="86" rx="22" ry="29" fill="#c78235" stroke="#613713" stroke-width="2"/>
+          <ellipse cx="51" cy="92" rx="12" ry="19" fill="#f4d7a0"/>
+          <!-- ears -->
+          <path d="M35 29 L31 8 Q48 13 49 30Z" fill="#bd762d" stroke="#613713" stroke-width="2"/><path d="M59 28 L68 10 Q76 27 68 35Z" fill="#bd762d" stroke="#613713" stroke-width="2"/>
+          <path d="M37 25 L35 15 L44 28Z" fill="#eaa3a0"/><path d="M62 27 L68 17 L67 30Z" fill="#eaa3a0"/>
+          <ellipse cx="51" cy="43" rx="24" ry="25" fill="#c78235" stroke="#613713" stroke-width="2"/>
+          <ellipse cx="54" cy="50" rx="17" ry="14" fill="#f4d7a0"/>
+          <ellipse cx="43" cy="40" rx="5" ry="7" fill="#fff"/><ellipse cx="59" cy="39" rx="5" ry="7" fill="#fff"/>
+          <circle cx="44" cy="40" r="2.7" fill="#21150e"/><circle cx="59" cy="39" r="2.7" fill="#21150e"/>
+          <ellipse cx="53" cy="48" rx="4" ry="3" fill="#553016"/>
+          <path d="M47 54 Q54 60 61 53" fill="none" stroke="#613713" stroke-width="2.3" stroke-linecap="round"/>
+          <circle cx="38" cy="50" r="3" fill="#eaa3a0" opacity=".8"/>
+        </g>
+        <g class="arm-a"><path d="M39 70 Q25 65 20 51" fill="none" stroke="#c78235" stroke-width="10" stroke-linecap="round"/><circle cx="19" cy="49" r="5" fill="#f4d7a0"/></g>
+        <g class="arm-b tag-hand"><path d="M69 71 Q82 64 86 51" fill="none" stroke="#c78235" stroke-width="10" stroke-linecap="round"/><circle cx="87" cy="49" r="5" fill="#f4d7a0"/></g>
+        <g class="leg-a"><path d="M43 107 L33 122" stroke="#a66428" stroke-width="10" stroke-linecap="round"/><ellipse cx="28" cy="124" rx="10" ry="5" fill="#f4d7a0"/></g>
+        <g class="leg-b"><path d="M61 107 L72 122" stroke="#a66428" stroke-width="10" stroke-linecap="round"/><ellipse cx="77" cy="124" rx="10" ry="5" fill="#f4d7a0"/></g>
+      </svg>
+    </div>
+  </div>
   <div class="scroll"></div>
 </header>
 
