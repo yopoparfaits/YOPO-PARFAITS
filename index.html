@@ -189,7 +189,7 @@ function showPhoto(p){
 var g=document.getElementById('grid');
 P.forEach(function(p,i){
   var c=document.createElement('article');c.className='card rv';c.style.transitionDelay=(i*.12)+'s';
-  c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
+   c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="quantity"><button type="button" class="qty-minus" aria-label="Decrease '+p.n+' quantity">−</button><span class="qty-value" id="qty-'+p.id+'">0</span><button type="button" class="qty-plus" aria-label="Increase '+p.n+' quantity">+</button></div><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';'<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
   g.appendChild(c);
   document.getElementById('f-'+p.id).addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
