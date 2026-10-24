@@ -204,16 +204,36 @@ function showPhoto(p){
 var yopoQuantities={};  
 function updateOrderSummary(){   var summary=document.getElementById('summary-items');   var totalElement=document.getElementById('order-total');   var total=0;   var html='';    P.forEach(function(p){     var qty=yopoQuantities[p.id]||0;      if(qty>0){       var lineTotal=qty*p.price;       total+=lineTotal;        html+='<div style="display:flex;justify-content:space-between;gap:12px;margin:14px 0;color:#ddd;">'         +'<span>'+p.n+' × '+qty         +'<br><small style="color:#999;">₹'+p.price+' each</small></span>'         +'<strong style="color:#f6e27a;white-space:nowrap;">₹'+lineTotal+'</strong>'         +'</div>';     }   });    summary.innerHTML=html||'<p style="color:#aaa;">Choose your parfaits using the + buttons.</p>';   totalElement.textContent='₹'+total; }
   
+
 document.getElementById('whatsapp-order').addEventListener('click',function(e){
   var items=[];
+  var total=0;
+
   P.forEach(function(p){
     var qty=yopoQuantities[p.id]||0;
-    if(qty>0)items.push(p.n+' x '+qty);
+    if(qty>0){
+      var lineTotal=qty*p.price;
+      total+=lineTotal;
+      items.push(p.n+' x '+qty+' = ₹'+lineTotal);
+    }
   });
+
   if(items.length===0){
     e.preventDefault();
     alert('Please select at least one parfait using the + button.');
     return;
+  }
+
+  var message='Hi YOPO PARFAITS! I would like to order:\n\n'+
+    items.join('\n')+
+    '\n\nTOTAL: ₹'+total+
+    '\n\nPlease confirm my order. Thank you!';
+
+  this.href='https://wa.me/919390263772?text='+encodeURIComponent(message);
+});
+
+var g=document.getElementById('grid');
+
   }
   document.getElementById('whatsapp-order').addEventListener('click',function(e){
   var items=[];
@@ -255,17 +275,22 @@ P.forEach(function(p,i){
   c.innerHTML='<span class="num">0'+(i+1)+'</span><div class="in"><div class="ph" id="ph-'+p.id+'">'+glass+'</div><h4 class="gold">'+p.n+'</h4><p>'+p.d+'</p><div class="quantity"><button type="button" class="qty-minus" aria-label="Decrease '+p.n+' quantity">−</button><span class="qty-value" id="qty-'+p.id+'">0</span><button type="button" class="qty-plus" aria-label="Increase '+p.n+' quantity">+</button></div><div class="tools"><label hidden><span id="lb-'+p.id+'">UPLOAD PHOTO</span><input type="file" accept="image/*" id="f-'+p.id+'"></label><button id="rm-'+p.id+'" hidden>REMOVE</button></div></div>';
   g.appendChild(c);
  
-  var qty=0;
+ 
   c.querySelector('.qty-minus').addEventListener('click',function(){
     qty=Math.max(0,qty-1);
     yopoQuantities[p.id]=qty;
     document.getElementById('qty-'+p.id).textContent=qty;
+    updateOrderSummary();
   });
+
+  
   c.querySelector('.qty-plus').addEventListener('click',function(){
     qty++;
     yopoQuantities[p.id]=qty;
     document.getElementById('qty-'+p.id).textContent=qty;
     updateOrderSummary();
+  });
+
 
   document.getElementById('f-'+p.id).addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
