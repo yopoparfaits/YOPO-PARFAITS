@@ -97,6 +97,16 @@ footer b{display:block;font-size:1.6rem;letter-spacing:.3em;margin-bottom:8px}
 <section id="menu">
   <div class="title rv"><small>THE COLLECTION</small><h3 class="gold">Our Parfaits</h3><i></i></div>
   <div class="grid" id="grid"></div>
+  <div id="order-summary" style="margin:40px auto 20px;padding:24px;max-width:600px;background:#0a0a0a;border:1px solid #3a3018;color:#fff;">
+  <h3 style="color:#d4af37;margin:0 0 20px;">YOUR ORDER SUMMARY</h3>
+  <div id="summary-items">
+    <p style="color:#aaa;">Choose your parfaits using the + buttons.</p>
+  </div>
+  <div style="display:flex;justify-content:space-between;gap:12px;border-top:1px solid #333;padding-top:18px;margin-top:18px;font-size:1.2rem;">
+    <strong>TOTAL</strong>
+    <strong id="order-total" style="color:#f6e27a;">₹0</strong>
+  </div>
+</div>
 </section>
 
 <section id="why">
@@ -191,7 +201,9 @@ function showPhoto(p){
   ph.innerHTML='';
   ph.appendChild(img);
 }
-var yopoQuantities={};
+var yopoQuantities={};  
+function updateOrderSummary(){   var summary=document.getElementById('summary-items');   var totalElement=document.getElementById('order-total');   var total=0;   var html='';    P.forEach(function(p){     var qty=yopoQuantities[p.id]||0;      if(qty>0){       var lineTotal=qty*p.price;       total+=lineTotal;        html+='<div style="display:flex;justify-content:space-between;gap:12px;margin:14px 0;color:#ddd;">'         +'<span>'+p.n+' × '+qty         +'<br><small style="color:#999;">₹'+p.price+' each</small></span>'         +'<strong style="color:#f6e27a;white-space:nowrap;">₹'+lineTotal+'</strong>'         +'</div>';     }   });    summary.innerHTML=html||'<p style="color:#aaa;">Choose your parfaits using the + buttons.</p>';   totalElement.textContent='₹'+total; }
+  
 document.getElementById('whatsapp-order').addEventListener('click',function(e){
   var items=[];
   P.forEach(function(p){
@@ -203,7 +215,36 @@ document.getElementById('whatsapp-order').addEventListener('click',function(e){
     alert('Please select at least one parfait using the + button.');
     return;
   }
-  var message='Hi YOPO PARFAITS! I would like to order:\n\n'+items.join('\n')+'\n\nPlease confirm my order. Thank you!';
+  document.getElementById('whatsapp-order').addEventListener('click',function(e){
+  var items=[];
+  var total=0;
+
+  P.forEach(function(p){
+    var qty=yopoQuantities[p.id]||0;
+
+    if(qty>0){
+      var lineTotal=qty*p.price;
+      total+=lineTotal;
+
+      items.push(
+        p.n+' x '+qty+
+        ' = ₹'+lineTotal
+      );
+    }
+  });
+
+  if(items.length===0){
+    e.preventDefault();
+    alert('Please select at least one parfait using the + button.');
+    return;
+  }
+
+  var message=
+    'Hi YOPO PARFAITS! I would like to order:\n\n'+
+    items.join('\n')+
+    '\n\nTOTAL: ₹'+total+
+    '\n\nPlease confirm my order. Thank you!';
+
   this.href='https://wa.me/919390263772?text='+encodeURIComponent(message);
 });
 
@@ -224,7 +265,7 @@ P.forEach(function(p,i){
     qty++;
     yopoQuantities[p.id]=qty;
     document.getElementById('qty-'+p.id).textContent=qty;
-  });
+    updateOrderSummary();
 
   document.getElementById('f-'+p.id).addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
